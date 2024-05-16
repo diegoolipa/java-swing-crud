@@ -4,6 +4,9 @@
  */
 package com.diego.pe.cpresentacion;
 
+import com.diego.pe.cmodelo.Genero;
+import com.diego.pe.cnegocio.GeneroBO;
+import java.sql.SQLException;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
@@ -16,7 +19,39 @@ public class FrmGenero extends javax.swing.JFrame {
     /**
      * Creates new form FrmGenero
      */
- 
+    GeneroBO generoBO = new GeneroBO();
+    String mensaje;
+    String idGenero;
+    
+    public FrmGenero(){
+        initComponents();
+        listarGenero();
+    }
+    
+    private void listarGenero(){
+        generoBO.ListarGenero(tbGenero);
+    }
+    
+    private boolean validar(){
+        if(tfNombre.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Nombre es requerido");
+            return false;
+        }else if(tfSigla.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Sigla es requerido");
+            return false;
+        }else if(tfCodigo.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Codigo es requerido");
+            return false;
+        }
+        return true;
+    }
+    
+    private void limpiarGenero(){
+        tfNombre.setText("");
+        tfSigla.setText("");
+        tfCodigo.setText("");
+        GrpEstado.clearSelection();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,13 +62,14 @@ public class FrmGenero extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        GrpEstado = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         tfNombre = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        tfNombre1 = new javax.swing.JTextField();
+        tfSigla = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        tfNombre2 = new javax.swing.JTextField();
+        tfCodigo = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         rbActivo = new javax.swing.JRadioButton();
         rbInactivo = new javax.swing.JRadioButton();
@@ -63,9 +99,11 @@ public class FrmGenero extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         jLabel4.setText("Código");
 
+        GrpEstado.add(rbActivo);
         rbActivo.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         rbActivo.setText("Activo");
 
+        GrpEstado.add(rbInactivo);
         rbInactivo.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         rbInactivo.setText("Inactivo");
         rbInactivo.addActionListener(new java.awt.event.ActionListener() {
@@ -78,25 +116,50 @@ public class FrmGenero extends javax.swing.JFrame {
         jLabel5.setText("Estado");
 
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         tbGenero.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
+        tbGenero.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbGeneroMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbGenero);
 
         btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnMenuPrincipal.setText("Menu Principal");
         btnMenuPrincipal.addActionListener(new java.awt.event.ActionListener() {
@@ -124,9 +187,9 @@ public class FrmGenero extends javax.swing.JFrame {
                             .addComponent(jLabel2)
                             .addComponent(tfNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
-                            .addComponent(tfNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfSigla, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
-                            .addComponent(tfNombre2, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(rbActivo)
                                 .addGap(18, 18, 18)
@@ -171,11 +234,11 @@ public class FrmGenero extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfSigla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfNombre2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel5)
                         .addGap(5, 5, 5)
@@ -224,6 +287,74 @@ public class FrmGenero extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_btnSalirActionPerformed
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        if(validar()){
+            Genero genero = new Genero();
+            genero.setNombre(tfNombre.getText());
+            genero.setEstado(rbActivo.isSelected()?"1":"0");
+            genero.setSigla(tfSigla.getText());
+            genero.setCodigo(tfCodigo.getText());
+            try {
+                mensaje = generoBO.AgregarGenero(genero);
+                listarGenero();
+                limpiarGenero();
+                JOptionPane.showMessageDialog(null, mensaje);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, mensaje + e.getMessage());
+            }
+            
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        limpiarGenero();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void tbGeneroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbGeneroMouseClicked
+        int seleccion = tbGenero.rowAtPoint(evt.getPoint());
+        idGenero = tbGenero.getValueAt(seleccion, 0)+"";
+        tfNombre.setText(tbGenero.getValueAt(seleccion, 1)+"");
+        tfSigla.setText(tbGenero.getValueAt(seleccion, 3)+"");
+        tfCodigo.setText(tbGenero.getValueAt(seleccion, 4)+"");
+        if("1".equals(tbGenero.getValueAt(seleccion, 2)+"")){
+            rbActivo.setSelected(true);
+        }else{
+            rbInactivo.setSelected(true);
+        }
+    }//GEN-LAST:event_tbGeneroMouseClicked
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        try {
+            mensaje = generoBO.EliminarGenero(Integer.parseInt(idGenero));
+            listarGenero();
+            limpiarGenero();
+            JOptionPane.showMessageDialog(null, mensaje);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, mensaje + e.getMessage());
+        }
+            
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        if(validar()){
+            Genero genero = new Genero();
+            genero.setNombre(tfNombre.getText());
+            genero.setEstado(rbActivo.isSelected()?"1":"0");
+            genero.setSigla(tfSigla.getText());
+            genero.setCodigo(tfCodigo.getText());
+            genero.setIdGnero(Integer.parseInt(idGenero));
+            try {
+                mensaje = generoBO.ModificarGenero(genero);
+                listarGenero();
+                limpiarGenero();
+                JOptionPane.showMessageDialog(null, mensaje);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, mensaje + e.getMessage());
+            }
+            
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -260,6 +391,7 @@ public class FrmGenero extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup GrpEstado;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnLimpiar;
@@ -276,8 +408,8 @@ public class FrmGenero extends javax.swing.JFrame {
     private javax.swing.JRadioButton rbActivo;
     private javax.swing.JRadioButton rbInactivo;
     private javax.swing.JTable tbGenero;
+    private javax.swing.JTextField tfCodigo;
     private javax.swing.JTextField tfNombre;
-    private javax.swing.JTextField tfNombre1;
-    private javax.swing.JTextField tfNombre2;
+    private javax.swing.JTextField tfSigla;
     // End of variables declaration//GEN-END:variables
 }
